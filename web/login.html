@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    <script src="layui-v2.5.6/layui/layui.js"></script>
+    <link rel="stylesheet" href="layui-v2.5.6/layui/css/layui.css">
+    <title>登录</title>
+  </head>
+  <body>
+
+
+  <div class="layui-row">
+
+    <form class="layui-form" action="" lay-filter="testform" onsubmit="return false">
+      <div class="layui-form-item">
+        <label class="layui-form-label">账号</label>
+        <div class="layui-input-inline">
+          <input type="text" name="username" required  lay-verify="required" placeholder="请输入账号" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+
+
+      <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-inline">
+          <input type="password" name="password" required  lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+
+
+      <div class="layui-form-item">
+        <label class="layui-form-label">验证码</label>
+        <div class="layui-input-inline">
+          <input type="text" name="code" class="layui-input">
+           <img  src="/Dode1Servlet"   id="img" style="width: 70px;height: 50px" >
+
+        </div>
+      </div>
+
+
+
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" lay-submit lay-filter="formLogin">登录</button>
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+  <!-- !-- layui 如何使用内置模块 -->
+  <script>
+    //注意 一个html就写一个 layui.use 就可以了
+    // use 里有2个参数,第一个数组,第二个是方法
+    layui.use(['form','jquery','layer'], function(){
+      var form = layui.form;
+      var $ = layui.jquery;
+      var layer =layui.layer;
+      // 使用layer
+      //
+      //<button lay-submit lay-filter="filter">提交</button>
+      form.on('submit(formLogin)', function(data){
+
+        console.log('data.是什么');
+        console.log(data);
+        console.log('data.elem  原始对象');
+        console.log(data.elem); //原始DOM对象
+        console.log('data.value  被选中的值');
+        console.log(data.value); //被选中的值
+        console.log('data.othis  美化后DOM的对象');
+        console.log(data.othis); //美化后的DOM对象
+        console.log('data.field  date中的form下的name属性');
+        console.log(data.field); //date中的form下的 name属性
+        console.log('data.username data中的form下的 name=username 属性中的值');
+        console.log(data.username); // data中的form下的 name=username 属性中的值
+        console.log(data.password); // data中的form下的 name=password 属性中的值
+
+        $.ajax({
+          url:'/LoginServlet',
+          type:'POST',
+          data:data.field,
+          success:function (res) {
+            console.log(res)
+            if (res.code==400){
+              layer.msg(res.msg)
+            }
+            if (res.code==4001){
+
+
+              layer.msg(res.msg)
+            }
+            if (res.code==0){
+              //需要跳转到后台界面，前后端分离，页面跳转有前端负责，单体项目,页面跳转由后端负责
+              window.location.href="/home.html"
+            }
+          },
+          dataType:'json'
+        });
+      });
+
+      $ ('#img').click(function () {
+        document.getElementById("img").src="/Dode1Servlet?"+Math.random();
+      })
+
+    });
+  </script>
+  </body>
+</html>
