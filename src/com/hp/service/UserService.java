@@ -33,10 +33,11 @@ public class UserService {
     }
 
     // 带参数的分页查询
-    public Map selectAllByParam(int page, int limit){
+    public Map selectAllByParam(Map map1){
         Userr us = new Userr();
-        int i = us.selectCount();
-        List<User> users = us.selectAllByParam(page, limit);
+        List<User> users = us.selectAllByParam(map1);
+        int i = us.selectCount(map1);
+
         Map map = new HashMap();
       //  map.put("code",0); //必须和layui的json 返回的格式一样
         map.put("code",0);
@@ -52,9 +53,28 @@ public class UserService {
 //        }
 //        Map map2 = new HashMap();
 //        map.put("number",2001);
-//        map.put("msg","数据查询成功");
+//        map.put("message","数据查询成功");
 //        map.put("object",map);
 
         return map;
     }
+
+    // 修改是否 可用
+    public Map updateDel (Integer sfDel, Integer userId){
+            Userr us = new Userr();
+        int i = us.updateDel(sfDel,userId);
+
+        Map map  = new HashMap();
+        if (i == 1) {
+            map.put("code",0);
+            map.put("msg","修改成功");
+        }else{
+            map.put("code",400);
+            map.put("msg","修改不成功");
+        }
+       return map;
+    }
+//String  username,String password,String  real_name,String img,Integer  type,Integer is_del,String  create_time,String modify_time
+
+
 }

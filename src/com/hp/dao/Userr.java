@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Userr {
     // 增 删 改 查
@@ -59,12 +60,26 @@ public class Userr {
         return user;
     }
     // 查询总条数
-    public int selectCount(){
+    public int selectCount(Map map1){
+        String real_name = (String) map1.get("real_name");
+        String type = (String) map1.get("type");
+        String username = (String) map1.get("username");
+
         int total =0;
         //1. 创建连接
         Connection connection = DBHelper.getConnection();
         //2.书写sql语句
-        String sql = "select count(*) total from user";
+        String sql = "select count(*) total  from user where   1=1";// where 1=1因为有多余的 and
+        if (null != real_name&& real_name.length()>0) {
+            sql = sql + " and real_name like '%" +real_name +"%' ";
+        }
+        if (null !=type) {
+            sql = sql + " and type = " +type +" ";
+        }
+        if (null !=username) {
+            sql = sql + " and username like '%" +username +"%' ";
+        }
+        System.out.println("count 的 sql= " + sql);
         PreparedStatement ps = null;
         ResultSet rs = null;
         //3. 预编译sql
@@ -89,20 +104,44 @@ public class Userr {
     }
     // 动态的带参数的分页查询
     //  page 是 页数  条数 是limit
-    public List<User> selectAllByParam(int page,int limit){
-        List<User> lists = new ArrayList<>();
+    public List<User> selectAllByParam(Map map){
+
+        String page = (String) map.get("page");
+        String limit = (String) map.get("limit");
+        String real_name = (String) map.get("real_name");
+        String type = (String) map.get("type");
+        String username = (String) map.get("username");
+        // 如果说  real_name 不为空
+        //sql  =   select * from t_user where  real_name like %张%  limit ? , ?
+        // 如果说  type 不为空   real_name 不为空
+        /// sql  =   select * from t_user where  real_name like %张%  and  type=1   limit ? , ?
+        // 如果说  type 不为空   real_name 不为空    username  不为空
+        /// sql  =   select * from t_user where  real_name like %张%  and  type=1  and username like %李%   limit ? , ?
+
+            List<User> lists = new ArrayList<>();
         //1.创建连接
         Connection connection = DBHelper.getConnection();
         //2.sql语句
-        String sql = "select * from user limit ?,?";
+        String sql = "select * from user where 1=1  ";// where 1=1因为有多余的 and
+        if (null != real_name&& real_name.length()>0) {
+            sql = sql + " and real_name like '%" +real_name +"%' ";
+        }
+        if (null !=type) {
+            sql = sql + " and type = " +type +" ";
+        }
+        if (null !=username) {
+            sql = sql + " and username like '%" +username +"%' ";
+        }
+        sql = sql + "limit ? ,?" ;
+        System.out.println("dao 的 sql = " + sql);
         //3.编译 sql
         PreparedStatement ps = null;
         ResultSet rs = null;
-        PageBeanUtil pageBeanUtil = new PageBeanUtil(page,limit);
+        PageBeanUtil pageBeanUtil = new PageBeanUtil(Integer.parseInt(page),Integer.parseInt(limit));
         try {
              ps = connection.prepareStatement(sql);
              ps.setInt(1,pageBeanUtil.getStart());//索引
-             ps.setInt(2,limit);
+             ps.setInt(2,Integer.parseInt(limit));
              // 4.执行sql
               rs = ps.executeQuery();
             while (rs.next()) {
@@ -255,7 +294,42 @@ public class Userr {
             ps.setInt(6, user.getIs_del() );
             ps.setString(7, user.getCreate_time() );
             ps.setString(8, user.getModify_time() );
-            ps.setInt(9, user.getId() );
+            ps.setInt(9, user.getId());
+            //执行预编译对象
+            i = ps.executeUpdate();
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            try {
+                connection.close();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        return i;
+    }
+
+
+    //修改 是否能用
+    public int updateDel(Integer sfDel,Integer userId ) {
+        // TODO Auto-generated method stub
+
+        Connection connection=null;
+        PreparedStatement ps = null;
+        int i = 0;
+        try {
+            // 第一步创建连接对象
+            connection =DBHelper.getConnection();
+            // 第二步 书写sql语句
+            String sql = "update user set  is_del=? where id = ? ";
+            //第三步 预编译sql
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, sfDel );
+            ps.setInt(2, userId );
             //执行预编译对象
             i = ps.executeUpdate();
 
@@ -277,7 +351,10 @@ public class Userr {
     public static void main(String[] args) {
         //全查//
        Userr us = new Userr();
-   //     User user = new User();
+        // 修改 是否能用
+        int sfDel = us.updateDel(1,39);
+        System.out.println("del = " + sfDel);
+        //     User user = new User();
 //        List<User> list = us.selectAll();
 //        for (User user : list) {
 //            System.out.println("user = " + user);
@@ -316,12 +393,15 @@ public class Userr {
 //        System.out.println("user = " + user);
 
         //分页查询的 测试
-//        List<User> users =us.selectAllByParam(1,5);
+//        List<User> users = us.selectAllByParam( 1,5);
 //        System.out.println("users = " + users);
 //        System.out.println("users.size() = " + users.size());
+
+
         // 查询 总条数
-        int i = us.selectCount();
-        System.out.println("i = " + i);
+//        int i = us.selectCount();
+//        System.out.println("i = " + i);
     }
+
 
 }

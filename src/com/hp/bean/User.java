@@ -11,8 +11,6 @@ public class User {
         private String create_time ;
         private String modify_time ;
 
-
-
     @Override
     public String toString() {
         return "User{" +
@@ -27,7 +25,6 @@ public class User {
                 ", modify_time='" + modify_time + '\'' +
                 '}';
     }
-
 
     public int getId() {
         return id;
