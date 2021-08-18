@@ -18,7 +18,7 @@ public class Dode1Servlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-
+        //线性 验证码
         //使用hutool 工具  创建验证码
         //定义图形验证码的长和宽
         LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 100);

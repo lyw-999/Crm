@@ -1,9 +1,7 @@
 package com.hp.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.hp.bean.User;
-import com.hp.dao.Userr;
-import com.hp.service.UserService;
+import com.hp.dao.UserDao;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,16 +9,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Map;
 
 @WebServlet(name = "UpdateServlet",urlPatterns = "/UpdateServlet")
-public class UpdateServlet extends HttpServlet {
+public class UserUpdateServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //1.修正编码
         req.setCharacterEncoding("utf-8");
         resp.setContentType("text/html ; charset=UTF-8");
+
         // 2.接受参数
         String id = req.getParameter("id");
         System.out.println("id = " + id);
@@ -47,15 +44,16 @@ public class UpdateServlet extends HttpServlet {
         String modify_time = req.getParameter("modify_time");
         System.out.println("modify_time = " + modify_time);
 
-        int isdel1=(is_del=="是"?1:2);
-       int id1 = Integer.parseInt(id);
+       int isdel1=((is_del=="1") ? 1 : 2);
+       // int isdel1 = Integer.parseInt(is_del);
+        int id1 = Integer.parseInt(id);
         int type1 = Integer.parseInt(type);
-       System.out.println("id1 = " + id1);
+        System.out.println("id1 = " + id1);
         System.out.println("isdel1 = " + isdel1);
         System.out.println("type = " + type);
         System.out.println("type1 = " + type1);
         // 调用dao 层
-        Userr us = new Userr();
+        UserDao us = new UserDao();
         User user = new User();
 
         user.setUsername(username);

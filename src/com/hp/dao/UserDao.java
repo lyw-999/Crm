@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Userr {
+public class UserDao {
     // 增 删 改 查
     // dao层 如何 和数据库做对接 ,我们用的知识点叫做jdbc
 
@@ -59,6 +59,7 @@ public class Userr {
         }
         return user;
     }
+
     // 查询总条数
     public int selectCount(Map map1){
         String real_name = (String) map1.get("real_name");
@@ -175,7 +176,7 @@ public class Userr {
         // 步骤1: 创建出 连接对象
         Connection connection = DBHelper.getConnection();
         // 步骤2: 创建出 sql 语句
-        String sql = "select * from user";
+        String sql = "select * from user where type = 2";
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -312,8 +313,6 @@ public class Userr {
 
         return i;
     }
-
-
     //修改 是否能用
     public int updateDel(Integer sfDel,Integer userId ) {
         // TODO Auto-generated method stub
@@ -350,7 +349,7 @@ public class Userr {
 
     public static void main(String[] args) {
         //全查//
-       Userr us = new Userr();
+       UserDao us = new UserDao();
         // 修改 是否能用
         int sfDel = us.updateDel(1,39);
         System.out.println("del = " + sfDel);

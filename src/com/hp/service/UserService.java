@@ -1,7 +1,7 @@
 package com.hp.service;
 
 import com.hp.bean.User;
-import com.hp.dao.Userr;
+import com.hp.dao.UserDao;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -14,8 +14,8 @@ public class UserService {
     public Map login(String username, String password, HttpServletRequest reqeust){
       // service层 要调用dao层
         Map map =new HashMap();
-        Userr userr = new Userr();
-        User userFromDB =userr.login(username,password);
+        UserDao userDao = new UserDao();
+        User userFromDB = userDao.login(username,password);
         if ( null==userFromDB) {
             //没查出来,即:账户名或者密码错误
             map.put("code",4001);
@@ -34,7 +34,7 @@ public class UserService {
 
     // 带参数的分页查询
     public Map selectAllByParam(Map map1){
-        Userr us = new Userr();
+        UserDao us = new UserDao();
         List<User> users = us.selectAllByParam(map1);
         int i = us.selectCount(map1);
 
@@ -61,7 +61,7 @@ public class UserService {
 
     // 修改是否 可用
     public Map updateDel (Integer sfDel, Integer userId){
-            Userr us = new Userr();
+            UserDao us = new UserDao();
         int i = us.updateDel(sfDel,userId);
 
         Map map  = new HashMap();
@@ -76,5 +76,44 @@ public class UserService {
     }
 //String  username,String password,String  real_name,String img,Integer  type,Integer is_del,String  create_time,String modify_time
 
+    //修改全部
+    public Map Update(User user){
+        Map codeMap = new HashMap();
+        UserDao us = new UserDao();
+        int i = us.update(user);
+        if (i == 1) {
+             codeMap.put("code",0);
+             codeMap.put("msg","请求成功");
+        }else{
+            codeMap.put("code",400);
+            codeMap.put("msg","请求失败");
+        }
+        return codeMap;
+    }
+
+    //按id 查询1个 user
+    public Map selectUserByid(Integer id){
+        UserDao us = new UserDao();
+        List<User> users = us.selectAll();
+
+        Map codeMap = new HashMap();
+        codeMap.put("code",0);
+        codeMap.put("msg","ok");
+        codeMap.put("data",users);
+
+        return codeMap;
+    }
+    //全查 业务员
+    public Map selectAll(){
+        UserDao us = new UserDao();
+        List<User> users = us.selectAll();
+
+        Map codeMap = new HashMap();
+        codeMap.put("code",0);
+        codeMap.put("msg","ok");
+        codeMap.put("data",users);
+
+        return codeMap;
+    }
 
 }

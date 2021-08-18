@@ -1,9 +1,7 @@
 package com.hp.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hp.bean.User;
-import com.hp.dao.Userr;
-import com.hp.service.UserService;
+import com.hp.dao.UserDao;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,12 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 @WebServlet(name = "InsertServlet" ,urlPatterns = "/InsertServlet")
-public class InsertServlet extends HttpServlet {
+public class UserInsertServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -48,7 +43,7 @@ public class InsertServlet extends HttpServlet {
         String modify_time = req.getParameter("modify_time");
         System.out.println("modify_time = " + modify_time);
 
-        Userr us = new Userr();
+        UserDao us = new UserDao();
         User user = new User();
 
         user.setUsername(username);

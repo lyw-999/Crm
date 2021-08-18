@@ -125,6 +125,12 @@
                 </div>
             </div>
 
+        <!--          下面应该有一个提交或者修改的按钮-->
+<!--        <div class="layui-form-item">-->
+<!--            <div class="layui-input-block">-->
+<!--                <button class="layui-btn" lay-submit lay-filter="updateSubmit" id="updateSubmit">立即提交</button>-->
+<!--            </div>-->
+<!--        </div>-->
 
     </form>
 </script>
@@ -329,7 +335,7 @@
                             }
 
                         });
-                     layer.msg("添加成功");
+                    // layer.msg("添加成功");
                     break;
                 //自定义头工具栏右侧图标 - 提示
                 case 'LAYTABLE_TIPS':
@@ -496,9 +502,9 @@
                 }
             });
 
-            layer.msg('开关checked:'+(this.checked ? 'true' : 'false'),{
-                offset: "6px"
-            });
+            // layer.msg('开关checked:'+(this.checked ? 'true' : 'false'),{
+            //     offset: "6px"
+            // });
             // layer.tips(温馨提示: 请注意开关状态的文字是可以随便定义的,而不仅仅是ON|OFF', data.othis)
         });
 

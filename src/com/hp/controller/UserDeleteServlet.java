@@ -1,7 +1,6 @@
 package com.hp.controller;
 
-import com.hp.bean.User;
-import com.hp.dao.Userr;
+import com.hp.dao.UserDao;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(name = "DeleteServlet",urlPatterns = "/DeleteServlet")
-public class DeleteServlet extends HttpServlet {
+public class UserDeleteServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //1.修正编码
@@ -22,7 +21,7 @@ public class DeleteServlet extends HttpServlet {
         System.out.println("id = " + id);
 
         // 调用dao 层
-        Userr us = new Userr();
+        UserDao us = new UserDao();
         int i = us.delete(Integer.parseInt(id));
         System.out.println("删除成功 " + i);
     }
