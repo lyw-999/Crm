@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustrService {
+public class CustomerService {
 
     // 带参数的分页查询
     public Map selectAllByParam(Map map1){
@@ -25,7 +25,8 @@ public class CustrService {
         return map;
     }
 
-    //  课堂查询
+
+    //  课堂查询 全查
     public Map selectAll(Map map){
         CustomerDao customerDao = new CustomerDao();
         List<Map>  maps = customerDao.selectAll(map);
@@ -52,5 +53,28 @@ public class CustrService {
         codemap.put("msg","ok");
         codemap.put("data",i);
         return codemap;
+    }
+    // 增加
+    public Map addCustomer(Customer customer){
+        CustomerDao dao = new CustomerDao();
+        int i = dao.addCustomer(customer);
+
+        Map codeMap = new HashMap();
+        if (i == 1) {
+            codeMap.put("code",0);
+            codeMap.put("msg","添加成功");
+        }else{
+            codeMap.put("code",400);
+            codeMap.put("msg","添加失败");
+        }
+        return codeMap;
+    }
+
+    //删除
+    public int delete(Integer id){
+        CustomerDao dao = new CustomerDao();
+        int i = dao.delete(id);
+        return  i;
+
     }
 }

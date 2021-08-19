@@ -125,18 +125,27 @@ public class CustomerDao {
     }
 
     // 添加
-    public int addUser(Customer customer){
+    public int addCustomer(Customer customer){
         //第一步 创建连接对象
         Connection connection = DBHelper.getConnection();
         //第二步  sql语句
-        String sql ="insert into customer values (null,?,?,?,?,?,?,?,?)";
+        String sql ="insert into customer values (null ,?,?,?,?,?,?,?,?,?,?)";
 
         PreparedStatement ps =null;
         int i =0;
         try {
             //第三步 预编译 sql
             ps =  connection.prepareStatement(sql);
-
+            ps.setString(1,customer.getCust_name());
+            ps.setString(2,customer.getCust_company());
+            ps.setString(3,customer.getCust_position());
+            ps.setString(4,customer.getCust_phone());
+            ps.setString(5,customer.getCust_birth());
+            ps.setInt(6,customer.getCust_sex());
+            ps.setString(7,customer.getCust_desc());
+            ps.setInt(8,customer.getUser_id());
+            ps.setString(9,customer.getCreate_time());
+            ps.setString(10,customer.getModify_time());
 
             //第四步 执行预编译对象
             i =ps.executeUpdate();
@@ -153,6 +162,37 @@ public class CustomerDao {
     }
 
 
+    //删除
+    public int delete(int id) {
+
+        Connection connection=null;
+        PreparedStatement ps = null;
+        int i = 0;
+        try {
+            //第一步 创建连接对象
+            connection = DBHelper.getConnection();
+            //第二步  sql语句
+            String sql = "delete from customer where id = ?";
+            //第三步 预编译 sql
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            //第四步 执行预编译对象
+            i = ps.executeUpdate();
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            try {
+                connection.close();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        return i;
+    }
     // 查询总条数
     public int selectCount(Map map1){
 
@@ -254,9 +294,29 @@ public class CustomerDao {
 //        List<Map> maps = dao.selectAll(paramMap);
 //        System.out.println("maps = " + maps);
 //        System.out.println("maps.size() = " + maps.size());
-        //查询总条数
 
-        int i = dao.selectAllCount(paramMap);
+        //查询总条数
+//        int i = dao.selectAllCount(paramMap);
+//        System.out.println("i = " + i);
+
+        // 添加
+//        Customer customer = new Customer();
+//      //  customer.setId(0);
+//        customer.setCust_name("程序员");
+//        customer.setCust_company("厚朴");
+//        customer.setCust_position("Java开发");
+//        customer.setCust_phone("110120");
+//        customer.setCust_birth("2011-12-12");
+//        customer.setCust_sex(2);
+//        customer.setCust_desc("每天就是敲代码,秃头也没事 加油");
+//        customer.setUser_id(38);
+//        customer.setCreate_time("2020-08-08");
+//        customer.setModify_time("2020-08-08");
+//        int i = dao.addCustomer(customer);
+//        System.out.println("i = " + i);
+
+
+        int i = dao.delete(20);
         System.out.println("i = " + i);
     }
 

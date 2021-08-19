@@ -1,6 +1,6 @@
 package com.hp.controller;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import com.hp.service.CustomerService;
 
 import javax.servlet.ServletException;
@@ -13,25 +13,27 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet(name = "CustomerServlet" ,urlPatterns = "/CustomerServlet")
-public class CustomerServlet extends HttpServlet {
+@WebServlet(name = "CustomerDeleteAllServlet" ,urlPatterns ="/CustomerDeleteAllServlet" )
+public class CustomerDeleteAllServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // 1. 修正编码
         req.setCharacterEncoding("utf-8");
         resp.setContentType("text/html ; charset=UTF-8");
-        //2.接受 2个参数 page limit
-        String page = req.getParameter("page");
-        String limit = req.getParameter("limit");
+        //2. 重点 servlet 接受数组数据
+        String[] parameterValues = req.getParameterValues("ids[]");
+        CustomerService service = new CustomerService();
+        //3.遍历获取id
+        for (String idstr : parameterValues) {
+            int i =service.delete(Integer.parseInt(idstr));
+            System.out.println("i = " + i);
+         }
 
-        Map map1 = new HashMap();
-        map1.put("page",page);
-        map1.put("limit",limit);
+        Map map = new HashMap();
+        map.put("code",0);
+        map.put("msg","ok");
+        String s = JSON.toJSONString(map);
 
-        CustomerService customerService = new CustomerService();
-        Map map = customerService.selectAllByParam(map1);
-
-        String s = JSONObject.toJSONString(map);
         PrintWriter writer = resp.getWriter();
         writer.println(s);
         writer.close();
