@@ -7,7 +7,92 @@
     <link rel="stylesheet" href="layui-v2.5.6/layui/css/layui.css">
 </head>
 <body>
+<!--我是修改的界面-->
+<script type="text/html" id="updateHtml">
+    <form class="layui-form layui-form-pane"  action="" onsubmit="return false" lay-filter="updateHtml">
 
+        <div class="layui-form-item" >
+            <label class="layui-form-label" >客户名</label>
+            <div class="layui-input-inline"  >
+                <input type="text" name="cust_name" placeholder="请输入姓名" class="layui-input" >
+            </div>
+        </div>
+
+        <div class="layui-form-item" >
+            <label class="layui-form-label" >客户公司</label>
+            <div class="layui-input-inline" >
+                <input type="text" name="cust_company" placeholder="请输入公司名" class="layui-input" >
+            </div>
+        </div>
+
+        <div class="layui-form-item" >
+            <label class="layui-form-label">客户手机号</label>
+            <div class="layui-input-inline" >
+                <input type="text" name="cust_phone" placeholder="请输入手机号" class="layui-input" >
+            </div>
+        </div>
+
+        <div class="layui-form-item" >
+            <label class="layui-form-label" >客户职位</label>
+            <div class="layui-input-inline"  >
+                <input type="text" name="cust_position" placeholder="请输入职位" class="layui-input" >
+            </div>
+        </div>
+
+        <div class="layui-form-item" >
+            <label class="layui-form-label">客户生日</label>
+            <div class="layui-input-inline"  >
+                <input type="text" name="cust_birth" class="layui-input" id="update_birth"
+                       placeholder="yyyy-MM-dd HH:mm:ss">
+            </div>
+        </div>
+
+        <div class="layui-form-item" >
+            <label class="layui-form-label">客户描述</label>
+            <div class="layui-input-block"  >
+                <textarea name="cust_desc" placeholder="请输入内容" class="layui-textarea"> </textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item" >
+            <label class="layui-form-label">客户性别</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="cust_sex" value="1" title="男" checked="">
+                <input type="radio" name="cust_sex" value="2" title="女" >
+            </div>
+        </div>
+
+        <div class="layui-form-item" >
+            <label class="layui-form-label">拜访人</label>
+            <div class="layui-input-inline"  >
+                <select name="user_id" lay-filter="user_id"  id="">
+                    <option value="" selected="">请选择</option>
+                    <!--                <option value="1"  >从后台查询</option>-->
+                    <!--                <option value="2"  >查询非管理员</option>-->
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item" >
+            <label class="layui-form-label">拜访时间</label>
+            <div class="layui-input-inline"  >
+                <input type="text" name="create_time" class="layui-input" id="updatevisitTime"
+                       placeholder="yyyy-MM-dd HH:mm:ss">
+            </div>
+        </div>
+        <!--        <div class="layui-form-item" >-->
+        <!--        <div class="layui-input-inline">-->
+        <!--            <button type="submit" class="layui-btn" lay-submit="" lay-filter="addBtn">添加</button>-->
+        <!--        </div>-->
+        <!--        </div>-->
+
+        <!--          下面应该有一个提交或者修改的按钮-->
+        <!--  这是 隐藏的  <input class="layui-input" type="hidden" value="" name="user_id">-->
+        <div class="layui-input-inline">
+            <button type="submit" class="layui-btn" lay-submit=""  id="myupdateSubmit" lay-filter="myupdateSubmit">确定修改</button>
+        </div>
+    </form>
+</script>
 <!--我是拜访的界面-->
 <script type="text/html" id="baifangHtml">
 
@@ -36,7 +121,7 @@
         </div>
 
         <input class="layui-input" type="hidden" value="" name="user_id">
-        <input class="layui-input" type="hidden" value="" name="cust_id">
+        <input class="layui-input" type="hidden" value="" name="id">
         <button   class="layui-btn layui-hide" lay-submit=""  id="mybaiFangSubmit" lay-filter="mybaiFangSubmit">提交</button>
     </form>
 </script>
@@ -120,7 +205,7 @@
 <!--        </div>-->
 
     <!--          下面应该有一个提交或者修改的按钮-->
-    <input class="layui-input" type="hidden" value="" name="user_id">
+<!--  这是 隐藏的  <input class="layui-input" type="hidden" value="" name="user_id">-->
     <div class="layui-input-inline">
         <button type="submit" class="layui-btn" lay-submit=""  id="myAddSubmit" lay-filter="myAddSubmit">确定添加</button>
     </div>
@@ -412,7 +497,7 @@
                     area: ['600px', '600px'],
                     type: 1,
                     // content: '传入任意的文本或html' //这里content是一个普通的String
-                    content: $("#").html(),
+                    content: $("#updateHtml").html(),
                     success:function (layero,index){
                         console.log(layero)
                         console.log(index)
@@ -450,7 +535,7 @@
                 // });
             }else if(obj.event === 'lookCustomer'){
 
-                alert("我要写拜访记录")
+                //alert("我要写拜访记录")
                 layer.open({
                     type: "拜访记录",
                     area: ['600px', '600px'],
@@ -459,14 +544,14 @@
                     content: $("#baifangHtml").html(),
                     success:function (layero,index){
                         console.log("将来要 赋值到表单中的名字")
-                        console.log(data.user_id)
                         console.log(data.id)
+                        console.log(data.user_id)
                         console.log(data.cust_name)
 
 
                         form.val('baifangHtml',{
-                            "user_id":data.user_id,
                             "id":data.id,
+                            "user_id":data.user_id,
                             "cust_name":data.cust_name,
                         });
                         form.render();  // 重点:强调: 当界面发生改变时, 记得 重新渲染模块,不然不显示效果
@@ -474,7 +559,7 @@
                         //日期时间选择器
                         laydate.render({
                             elem: '#visit_time'
-                            ,type: 'datetime'
+                            //,type: 'datetime'
                         });
 
                     },
@@ -532,7 +617,28 @@
             return   false;
         });
 
+        //  监听拜访事件
+        form.on('submit(mybaiFangSubmit)', function(data){
+            console.log(data);
+            $.ajax({
+                url: '/VisitInsertServlet',
+                type: 'post',
+                data: data.field,
+                dataType: 'JSON',
+                success:function (res) {
+                    console.log(res)
+                    if(res.code == 0){
+                        layer.msg("拜访成功");
+                        table.reload('test',{
+                            page:{
+                                curr : 1//重新从第 1 页开始
+                            }
+                        });//只重载数据
+                    }
+                }
+            });
 
+        });
     });
 
 </script>

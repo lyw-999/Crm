@@ -6,6 +6,10 @@
   <title>layout 管理系统大布局 - Layui</title>
   <script src="layui-v2.5.6/layui/layui.js"></script>
   <link rel="stylesheet" href="layui-v2.5.6/layui/css/layui.css">
+  <script>
+    var username = getUrlParam("username");//根据URL地址栏中的参数名称获取对应的值
+  </script>
+
 </head>
 <body>
 <div class="layui-layout layui-layout-admin">
@@ -32,14 +36,14 @@
     </ul>
     <ul class="layui-nav layui-layout-right">
       <li class="layui-nav-item layui-hide layui-show-md-inline-block">
-        <a href="javascript:;">
-          <img src="//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">
-          tester
+        <a  >
+       <img src="//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">
+          <span id="ausername">tester</span>
         </a>
         <dl class="layui-nav-child">
-          <dd><a href="">Your Profile</a></dd>
-          <dd><a href="">Settings</a></dd>
-          <dd><a href="">Sign out</a></dd>
+          <dd><a href="">个人中心</a></dd>
+          <dd><a href="">设置</a></dd>
+          <dd><a href="">退出</a></dd>
         </dl>
       </li>
       <li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
@@ -59,6 +63,7 @@
           <dl class="layui-nav-child">
             <dd><a href="/userlist.html" target="suibian">用户管理</a></dd>
             <dd><a href="/customerlist.html" target="suibian">客户管理</a></dd>
+            <dd><a href="/visit.html" target="suibian">拜访管理</a></dd>
           </dl>
         </li>
         <li class="layui-nav-item">
@@ -92,11 +97,11 @@
 <script src="layui-v2.5.6/layui/layui.js"></script>
 <script>
 //JS 
-layui.use(['element', 'layer', 'util'], function(){
+layui.use(['element', 'layer', 'util',jquery], function(){
   var element = layui.element
   ,layer = layui.layer
   ,util = layui.util
-  ,$ = layui.$;
+  ,$ = layui.jquery;
   
   //头部事件
   util.event('lay-header-event', {
@@ -115,8 +120,32 @@ layui.use(['element', 'layer', 'util'], function(){
       });
     }
   });
-  
+    var  username =getUrlParam("username");
+    console.log(username);
+    $("#username").text(username);
 });
+
+
+function getUrlParam(paraName) {
+  var url = document.location.toString();
+  alert(url);
+  var arrObj = url.split("?");
+  if (arrObj.length > 1) {
+    var arrPara = arrObj[1].split("&");
+    var arr;
+    for (var i = 0; i < arrPara.length; i++) {
+      arr = arrPara[i].split("=");
+      if (arr != null && arr[0] == paraName) {
+        return arr[1];
+      }
+    }
+    console.log(arr)
+    return "";
+  }
+  else {
+    return "";
+  }
+}
 </script>
 </body>
 </html>

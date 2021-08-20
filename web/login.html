@@ -91,7 +91,7 @@
             }
             if (res.code==0){
               //需要跳转到后台界面，前后端分离，页面跳转有前端负责，单体项目,页面跳转由后端负责
-              window.location.href="/home.html"
+              window.location.href="/home.html?username="+res.username
             }
           },
           dataType:'json'
