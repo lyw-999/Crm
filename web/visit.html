@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>拜访记录</title>
+    <script src="layui-v2.5.6/layui/layui.js"></script>
+    <link rel="stylesheet" href="layui-v2.5.6/layui/css/layui.css">
+</head>
+<body>
+<!--                添加一个搜索框-->
+<form class="layui-form layui-form-pane" action="" onsubmit="return false">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">业务员ID</label>
+        <div class="layui-input-inline">
+            <input type="text" name="username" placeholder="请输入ID" class="layui-input" >
+        </div>
+
+        <div class="layui-input-inline">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="ssBtn">搜索</button>
+        </div>
+    </div>
+
+    <!--          下面应该有一个提交或者修改的按钮-->
+</form>
+
+
+
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+        <button class="layui-btn layui-btn-sm" lay-event="insert">添加</button>
+    </div>
+</script>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+
+</script>
+
+<script>
+    layui.use(['form','table','util','jquery','laydate'],function(args){
+
+        var form = layui.form;
+        var table = layui.table;
+        var util = layui.util;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+
+
+        table.render({
+            elem: '#test'
+            // ,url:'/test/table/demo1.json'
+            , url: '/VisitServlet'
+            , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                title: '提示'
+                , layEvent: 'LAYTABLE_TIPS'
+                , icon: 'layui-icon-tips'
+            }]
+            , title: '拜访记录表'
+            , cols: [[
+                {type: 'checkbox', fixed: 'left'}
+                , {field: 'id', title: '序号', align: "center", width: 80, fixed: 'left', edit: 'text', sort: true}
+                , {field: 'user_id', title: '业务员id', align: "center", width: 100}
+                , {field: 'cust_id', title: '客户id', align: "center", width: 100}
+                // , {field: 'password', title: '密码', align: "center", width: 100}
+                // , {
+                //     field: 'type', title: '类型', align: "center", width: 120, templet: function (d) {
+                //         if (d.type == 1) {
+                //             return " <span style='color: red'  >管理员</span>"
+                //         } else {
+                //             return " <span style='color: green'  >用户</span>"
+                //         }
+                //     }
+                // }
+                // , {
+                //     field: 'img', title: '头像', align: "center", width: 120, templet: function (d) {
+                //         if (d.img != null) {
+                //             return "<span > <img src='/tx.png'/></span>"
+                //         } else {
+                //             return "<span > <img src='/tx.png'/></span>"
+                //             // return "<a href='#'>暂无</a>"
+                //         }
+                //     }
+                // }
+                // , {
+                //     field: 'is_del', title: '是否能用', align: "center", width: 120, templet: function (d) {
+                //         if (d.is_del == 1) {
+                //             return "<input type=\"checkbox\" checked=\"\" name=\"open\" lay-skin=\"switch\" lay-filter=\"switchTest\" lay-text=\"是|否\" value='1'>"
+                //         } else {
+                //             return "<input type=\"checkbox\"              name=\"close\" lay-skin=\"switch\"  lay-filter=\"switchTest\" lay-text=\"是|否\" value='2'>"
+                //         }
+                //     }
+                // }
+                , {field: 'visit_desc', title: '拜访情况', align: "center", width: 200}
+                , {field: 'visit_time', title: '拜访时间', align: "center", width: 160}
+                , {field: 'create_time', title: '创建时间', align: "center", width: 160}
+                // ,{field:'birthday', title:'出生日期', width:250,templet:function (d) {
+                //         console.log(d)
+                //         // d 就是这一行数据, 拿到这个数据就可以进行一个修改
+                //         //util.toDateString(d.birthday, "yyyy-MM-dd HH:mm:ss");
+                //         return util.toDateString(d.birthday, "yyyy-MM-dd HH:mm:ss");;
+                //     } }
+                // ,{field: 'shen', title:'是否是神仙',width:150 , templet: function (d){
+                //         if (d.shen){
+                //             return  "<input type=\"checkbox\" checked=\"\" name=\"open\" lay-skin=\"switch\" lay-filter=\"switchTest\" lay-text=\"神仙|凡人\" value='神仙'>"
+                //         }else{
+                //             return  "<input type=\"checkbox\"              name=\"close\" lay-skin=\"switch\"  lay-filter=\"switchTest\" lay-text=\"神仙|凡人\" value='凡人'>"
+                //         }}}
+                , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150}
+            ]]
+            , page: true
+
+        });
+        //头工具栏事件
+        table.on('toolbar(test)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event) {
+                case 'getCheckData':
+                    var data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
+                    break;
+                case 'getCheckLength':
+                    var data = checkStatus.data;
+                    layer.msg('选中了：' + data.length + ' 个');
+                    break;
+                case 'isAll':
+                    layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                    break;
+
+                //自定义头工具栏右侧图标 - 提示
+                case 'LAYTABLE_TIPS':
+                    layer.alert('这是工具栏右侧自定义的一个图标按钮');
+                    break;
+
+            };
+        });
+        //监听行工具事件
+        table.on('tool(test)', function(obj){
+            var data = obj.data;
+            //console.log(obj)
+            if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    $.ajax({
+                        url: '/ ',
+                        type: 'post',
+                        data: {
+                            "id":data.id
+                        },
+                        dataType: 'json'
+                    });
+                    obj.del();
+                    layer.close(index);
+                    layer.msg("删除成功")
+
+                });
+            } else if(obj.event === 'edit'){
+                // layer.open({
+                //     type: "编辑",
+                //     area: ['600px', '600px'],
+                //     type: 1,
+                //     // content: '传入任意的文本或html' //这里content是一个普通的String
+                //     content: $("#updateHtml").html(),
+                //     success:function (layero,index){
+                //         console.log(layero)
+                //         console.log(index)
+                //         console.log("我是layer弹出后的回调")
+                //         //alert("谈不谈你")
+                //
+                //
+                //         //给表单赋值
+                //         form.val("myUpdate", { //myUpdate 即 class="layui-form" 所在元素属性 lay-filter="" 对应的值
+                //             "username": data.username   // "name": "value"
+                //             ,"real_name": data.real_name
+                //             ,"password": data.password
+                //             ,"type": data.type
+                //             ,"is_del": data.is_del
+                //             ,"modify_time": data.modify_time
+                //         });
+                //
+                //
+                //         form.render();  // 重点:强调: 当界面发生改变时, 记得 重新渲染模块,不然不显示效果
+                //
+                //         //日期时间选择器
+                //         laydate.render({
+                //             elem: '#updateTime'
+                //             ,type: 'datetime'
+                //         });
+                //
+                //
+                //     },
+                //     btn:['确定修改','取消修改','其他1','其他2'],
+                //     yes:function (index, layero) {
+                //         var username=$(layero).find('[name="username"]').val()
+                //         var real_name=$(layero).find('[name="real_name"]').val()
+                //         var type=$(layero).find('[name="type"]').val()
+                //         var is_del=$(layero).find('[name="is_del"]').val()
+                //         var img=$(layero).find('[name="img"]').val()
+                //         var create_time=data.create_time
+                //
+                //         var modify_time=$(layero).find('[name="modify_time"]').val()
+                //         var id=data.id
+                //         alert(id)
+                //         var password=$(layero).find('[name="password"]').val()
+                //
+                //         $.ajax({
+                //             url: '/UpdateServlet',
+                //             type: 'post',
+                //             data: {
+                //                 "id": id
+                //                 ,"username":  username
+                //                 ,"real_name":  real_name
+                //                 ,"password":  password
+                //                 ,"type":  type
+                //                 ,"is_del":  is_del
+                //                 ,"img": img
+                //                 ,"create_time": create_time
+                //                 ,"modify_time":  modify_time
+                //             },
+                //             dataType: 'json'
+                //
+                //
+                //         });
+                //         xr()
+                //         //开启该代码可禁止点击该按钮关闭
+                //
+                //     },btn2: function(index, layero){
+                //         alert("我取消了修改")
+                //         return false  // 开启该代码可禁止点击该按钮关闭
+                //     }
+                // });
+                // layer.prompt({
+                //     formType: 2
+                //     ,value: data.email
+                // }, function(value, index){
+                //     obj.update({
+                //         email: value
+                //     });
+                //     layer.close(index);
+                // });
+            }
+        });
+        //监听 搜索开关
+        form.on('submit(ssBtn)', function(data) {
+            // alert("点击了搜索")
+            console.log(data.field)
+            table.reload('test',{
+                where: {//设定异步数据接口的额外参数，任意设
+                    username: data.field.username
+                    , real_name: data.field.real_name
+                    , type: data.field.type
+
+                }
+                , page: {
+                    curr: 1 //重新从第.1.页开始
+                }
+            }); //只重载数据
+            return   false;
+        });
+
+    });
+
+</script>
+
+</body>
+</html>
