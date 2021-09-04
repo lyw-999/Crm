@@ -35,7 +35,7 @@ public class VisitInsertServlet extends HttpServlet {
 
         //3.赋值到实体类
         Visit visit = new Visit();
-       visit.setUser_id(Integer.parseInt(user_id));
+        visit.setUser_id(Integer.parseInt(user_id));
         visit.setCust_id(Integer.parseInt(cust_id));
         visit.setVisit_desc(visit_desc );
         visit.setVisit_time(visit_time);

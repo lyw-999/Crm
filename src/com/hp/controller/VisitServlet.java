@@ -24,13 +24,17 @@ public class VisitServlet extends HttpServlet {
         String page = req.getParameter("page");
         String limit = req.getParameter("limit");
 
-        String user_id = req.getParameter("user_id");
-        System.out.println("user_id = " + user_id);
+        String cust_id = req.getParameter("cust_id");
+        String visit_time = req.getParameter("visit_time");
+        String create_time = req.getParameter("create_time");
+        System.out.println("cust_id = " + cust_id);
 
         Map map1 = new HashMap();
         map1.put("page",page);
         map1.put("limit",limit);
-        map1.put("user_id",user_id);
+        map1.put("cust_id",cust_id);
+        map1.put("visit_time",visit_time);
+        map1.put("create_time",create_time);
 
         VisitService service = new VisitService();
         Map map = service.selectAllByParam(map1);

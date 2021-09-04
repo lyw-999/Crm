@@ -17,25 +17,27 @@ public class VisitDao {
     // 查询总条数
     public int selectCount(Map map1){
 
-//        String real_name = (String) map1.get("real_name");
-//        String type = (String) map1.get("type");
-//        String username = (String) map1.get("username");
+        String cust_id = (String) map1.get("cust_id");
+        String visit_time = (String) map1.get("visit_time");
+        String startTime = (String) map1.get("visit_time1");
+        String endTime = (String) map1.get("create_time");
 
         int total =0;
         //1. 创建连接
         Connection connection = DBHelper.getConnection();
         //2.书写sql语句
-        String sql = "select count(*) total  from visit where   1=1";// where 1=1因为有多余的 and
-       // String sql = "select count(*) total  from visit ";// where 1=1因为有多余的 and
-//        if (null != real_name&& real_name.length()>0) {
-//            sql = sql + " and real_name like '%" +real_name +"%' ";
-//        }
-//        if (null !=type) {
-//            sql = sql + " and type = " +type +" ";
-//        }
-//        if (null !=username) {
-//            sql = sql + " and username like '%" +username +"%' ";
-//        }
+        String sql = "select count(*) total  from visit where   1=1";// where 1=1因为有多余的 a
+
+        if (null !=cust_id  ) {
+            sql = sql + " and cust_id = " +cust_id +" ";
+        }
+        if (null !=visit_time && visit_time.length()>0 ) {
+            sql = sql + " order by " +"visit_time" +" " ;
+        }
+        if (null !=startTime && startTime.length()>0 && null !=endTime && endTime.length()>0) {
+            sql = sql + " and visit_time between " +startTime +" " +" and "+ endTime+" ";
+        }
+
         System.out.println("count 的 sql= " + sql);
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -64,37 +66,37 @@ public class VisitDao {
 
         String page = (String) map.get("page");
         String limit = (String) map.get("limit");
-      //  String real_name = (String) map.get("real_name");
-      //  String type = (String) map.get("type");
-      //  String username = (String) map.get("username");
-
+        String cust_id = (String) map.get("cust_id");
+        String visit_time = (String) map.get("visit_time");
+        String startTime = (String) map.get("visit_time1");
+        String endTime = (String) map.get("create_time");
+        System.out.println("endTime = " + endTime);
 
         List<Visit> lists = new ArrayList<>();
         //1.创建连接
         Connection connection = DBHelper.getConnection();
         //2.sql语句
         String sql = "select * from visit where 1=1  ";// where 1=1因为有多余的 and
-
-
-//        if (null != real_name&& real_name.length()>0) {
-//            sql = sql + " and real_name like '%" +real_name +"%' ";
-//        }
-//        if (null !=type) {
-//            sql = sql + " and type = " +type +" ";
-//        }
-//        if (null !=username) {
-//            sql = sql + " and username like '%" +username +"%' ";
-//        }
+        if (null !=cust_id  ) {
+            sql = sql + " and cust_id = " +cust_id +" ";
+        }
+        if (null !=visit_time && visit_time.length()>0 ) {
+            sql = sql + " order by " +"visit_time" +" " ;
+        }
+        if (null !=startTime && startTime.length()>0 && null !=endTime && endTime.length()>0) {
+            sql = sql + " and visit_time between " +startTime +" " +" and "+ endTime+" ";
+        }
          sql = sql + "limit ? ,?" ;
-//        System.out.println("dao 的 sql = " + sql);
+        System.out.println("dao 的 sql = " + sql);
         //3.编译 sql
         PreparedStatement ps = null;
         ResultSet rs = null;
         PageBeanUtil pageBeanUtil = new PageBeanUtil(Integer.parseInt(page),Integer.parseInt(limit));
         try {
+            //3. 预编译对象
             ps = connection.prepareStatement(sql);
-             ps.setInt(1,pageBeanUtil.getStart());//索引
-             ps.setInt(2,Integer.parseInt(limit));
+            ps.setInt(1,pageBeanUtil.getStart());//索引
+            ps.setInt(2,Integer.parseInt(limit));
             // 4.执行sql
             rs = ps.executeQuery();
             while (rs.next()) {

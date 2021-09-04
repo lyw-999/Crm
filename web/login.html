@@ -32,7 +32,7 @@
         <label class="layui-form-label">验证码</label>
         <div class="layui-input-inline">
           <input type="text" name="code" class="layui-input">
-           <img  src="/Dode1Servlet"   id="img" style="width: 70px;height: 50px" >
+           <img  src="/CodeServlet"   id="img" style="width: 70px;height: 50px" >
 
         </div>
       </div>
@@ -42,7 +42,13 @@
       <div class="layui-form-item">
         <div class="layui-input-block">
           <button class="layui-btn" lay-submit lay-filter="formLogin">登录</button>
+          <div class="layui-form-item">
+            <a href="/register/toRegister">没有账户,点击注册</a>
+            <!--<input id="butt" type="button" value="注册" /><br><br><br>-->
+          </div>
         </div>
+
+
       </div>
 
     </form>
@@ -97,7 +103,31 @@
           dataType:'json'
         });
       });
-
+      //  注册
+     // form.on('submit(formRegist)', function(data){
+     //
+     //    $.ajax({
+     //      url:'/LoginServlet',
+     //      type:'POST',
+     //      data:data.field,
+     //      success:function (res) {
+     //        console.log(res)
+     //        if (res.code==400){
+     //          layer.msg(res.msg)
+     //        }
+     //        if (res.code==4001){
+     //
+     //
+     //          layer.msg(res.msg)
+     //        }
+     //        if (res.code==0){
+     //          //需要跳转到后台界面，前后端分离，页面跳转有前端负责，单体项目,页面跳转由后端负责
+     //          window.location.href="/home.html?username="+res.username
+     //        }
+     //      },
+     //      dataType:'json'
+     //    });
+     //  });
       $ ('#img').click(function () {
         document.getElementById("img").src="/Dode1Servlet?"+Math.random();
       })
